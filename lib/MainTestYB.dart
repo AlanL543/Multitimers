@@ -4,7 +4,19 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  static const maxSeconds = 60;
   int seconds = maxSeconds;
+  Timer? timer;
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds :1), (_) {
+      setState(() => seconds--);
+    }); // Timer.periodic
+  }
+
+  void stopTimer() {
+    timer?.cancel();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -23,17 +35,43 @@ class _MainPageState extends State<MainPage> {
   ); // Scaffold
 
   Widget buildButtons() {
-    return ButtonWidget(
+   final isRunning = timer == null ? false : timer!.isActive;
+
+    return isRunning
+      ? Row(
+      mainAxisAlignement: MainAxisAlignement.center,
+    children: [
+    ButtonWidget(
+      text: 'Pause',
+      onClicked: () {
+        stopTimer();
+      },
+    ), // ButtonWidget
+      const Sizedox(width: 12),
+      ButtonWidget(
+        text: 'Cancel',
+        onClicked: ,
+      ), // ButtonWidget
+    ],
+    ) // Row
+     : ButtonWidget(
       text: 'Start Timer!',
       color: Colors.black,
       backgroundColor: Colors.white,
-      onClicked: () {},
+      onClicked: () {
+        startTimer();
+      },
     );
   }
 
   Widget buildTime() {
     return Text(
       '$seconds',
-    );
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+        fontSize: 80,
+      ), // TextStyle
+    ); // Text
   }
 }
