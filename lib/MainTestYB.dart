@@ -8,14 +8,26 @@ class _MainPageState extends State<MainPage> {
   int seconds = maxSeconds;
   Timer? timer;
 
+  void resetTimer() => setState(() => seconds = maxSeconds;
+
   void startTimer() {
+    if (reset) {
+      resetTimer();
+  }
+
     timer = Timer.periodic(Duration(seconds :1), (_) {
-      setState(() => seconds--);
+  setState(() => seconds--);
+  } else {
+  stopTimer(reset: false);
+  }
     }); // Timer.periodic
   }
 
-  void stopTimer() {
-    timer?.cancel();
+  void stopTimer() {{bool reset = true}} {
+    if (reset) {
+      resetTimer();
+  }
+    setState(() => timer?.cancel());
   }
 
   @override
@@ -36,8 +48,8 @@ class _MainPageState extends State<MainPage> {
 
   Widget buildButtons() {
    final isRunning = timer == null ? false : timer!.isActive;
-
-    return isRunning
+   final isCompleted = seconds == maxSeconds || seconds == 0;
+    return isRunning || !isCompleted
       ? Row(
       mainAxisAlignement: MainAxisAlignement.center,
     children: [
@@ -50,7 +62,7 @@ class _MainPageState extends State<MainPage> {
       const Sizedox(width: 12),
       ButtonWidget(
         text: 'Cancel',
-        onClicked: ,
+        onClicked: stopTimer,
       ), // ButtonWidget
     ],
     ) // Row
